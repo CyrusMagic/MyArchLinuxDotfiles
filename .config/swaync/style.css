@@ -1,0 +1,156 @@
+* {
+  font-family: "JetBrains Mono", "Noto Sans CJK SC", sans-serif;
+  font-size: 14px;
+}
+
+.notification-row {
+  outline: none;
+  margin: 8px;
+  padding: 0;
+}
+
+.notification {
+  background: rgba(239, 241, 245, 0.95);
+  border-radius: 12px;
+  margin: 0px;
+  padding: 0;
+  border: 2px solid rgba(30, 102, 245, 0.3);
+}
+
+.notification-content {
+  background: transparent;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.close-button {
+  background: rgba(230, 69, 83, 0.8);
+  color: #eff1f5;
+  border-radius: 8px;
+  margin: 8px;
+  padding: 4px;
+}
+
+.close-button:hover {
+  background: #d20f39;
+}
+
+.notification-default-action {
+  margin: 0;
+  padding: 0;
+  border-radius: 12px;
+}
+
+.summary {
+  font-weight: bold;
+  color: #4c4f69;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.time {
+  color: #6c6f85;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.body {
+  color: #5c5f77;
+  font-size: 13px;
+}
+
+.control-center {
+  background: rgba(239, 241, 245, 0.95);
+  border-radius: 16px;
+  border: 2px solid rgba(30, 102, 245, 0.4);
+  margin: 8px;
+  padding: 12px;
+}
+
+.control-center-list {
+  background: transparent;
+}
+
+.control-center-list-placeholder {
+  color: #9ca0b0;
+  font-size: 18px;
+}
+
+.widget-title {
+  background: transparent;
+  color: #1e66f5;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 12px;
+}
+
+.widget-title > button {
+  background: rgba(30, 102, 245, 0.2);
+  border-radius: 8px;
+  color: #4c4f69;
+  padding: 8px 16px;
+  border: 1px solid rgba(30, 102, 245, 0.3);
+}
+
+.widget-title > button:hover {
+  background: rgba(30, 102, 245, 0.3);
+  border-color: #1e66f5;
+}
+
+.widget-dnd {
+  background: transparent;
+  color: #4c4f69;
+  margin: 12px;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.widget-dnd > switch {
+  background: rgba(156, 160, 176, 0.6);
+  border-radius: 12px;
+  border: none;
+}
+
+.widget-dnd > switch:checked {
+  background: #1e66f5;
+}
+
+.widget-dnd > switch slider {
+  background: #4c4f69;
+  border-radius: 10px;
+}
+
+.widget-inhibitors {
+  background: transparent;
+  color: #4c4f69;
+  margin: 12px;
+  border-radius: 8px;
+}
+
+.widget-inhibitors > button {
+  background: rgba(30, 102, 245, 0.2);
+  border-radius: 8px;
+  color: #4c4f69;
+  padding: 8px 16px;
+  margin: 4px;
+  border: 1px solid rgba(30, 102, 245, 0.3);
+}
+
+.widget-inhibitors > button:hover {
+  background: rgba(30, 102, 245, 0.3);
+}
+
+/* 不同优先级的通知样式 */
+.notification.critical {
+  border-color: rgba(210, 15, 57, 0.6);
+}
+
+.notification.low {
+  border-color: rgba(156, 160, 176, 0.3);
+}
+
+/* 悬停效果 */
+.notification:hover {
+  border-color: #1e66f5;
+  transition: all 0.2s ease;
+}

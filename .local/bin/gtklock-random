@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WALL_DIR="${GTKLOCK_WALL_DIR:-$HOME/Pictures/wallpaper}"
+CONFIG_PATH="$HOME/.config/gtklock/config.ini"
+
+if [[ ! -d "$WALL_DIR" ]]; then
+    echo "Wallpaper directory not found: $WALL_DIR" >&2
+    exec gtklock --config "$CONFIG_PATH"
+fi
+
+mapfile -t files < <(find "$WALL_DIR" -maxdepth 2 -type f \
+    \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \
+       -o -iname '*.bmp' -o -iname '*.gif' -o -iname '*.webp' \))
+
+if [[ ${#files[@]} -eq 0 ]]; then
+    echo "No wallpapers found in $WALL_DIR" >&2
+    exec gtklock --config "$CONFIG_PATH"
+fi
+
+choice=${files[RANDOM % ${#files[@]}]}
+exec gtklock --config "$CONFIG_PATH" --background "$choice"

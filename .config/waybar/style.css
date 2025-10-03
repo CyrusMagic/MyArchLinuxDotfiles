@@ -1,0 +1,220 @@
+/* ===========================================================================
+ * Catppuccin Mocha inspired Waybar theme
+ * Adapted for Niri modules and common desktop widgets
+ * ======================================================================== */
+
+@define-color base      #1e1e2e;
+@define-color mantle    #181825;
+@define-color crust     #11111b;
+@define-color text      #cdd6f4;
+@define-color subtext1  #bac2de;
+@define-color subtext0  #a6adc8;
+@define-color overlay1  #7f849c;
+@define-color surface0  #313244;
+@define-color surface1  #45475a;
+@define-color surface2  #585b70;
+@define-color lavender  #b4befe;
+@define-color mauve     #cba6f7;
+@define-color flamingo  #f2cdcd;
+@define-color sapphire  #74c7ec;
+@define-color sky       #89dceb;
+@define-color teal      #94e2d5;
+@define-color green     #a6e3a1;
+@define-color yellow    #f9e2af;
+@define-color peach     #fab387;
+@define-color maroon    #eba0ac;
+@define-color red       #f38ba8;
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans CJK SC", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 0;
+}
+
+window#waybar {
+    background: transparent;
+}
+
+#waybar {
+    background: rgba(17, 17, 27, 0.65);
+    border-radius: 16px;
+    border: 1px solid #cba6f7;
+    box-shadow: none;
+    color: @text;
+    padding: 4px 6px;
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+    background: transparent;
+}
+
+/* Chip background for modules */
+#custom-logo,
+#niri-workspaces,
+#niri-window,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#temperature,
+#backlight,
+#battery,
+#clock,
+#tray {
+    background: rgba(49, 50, 68, 0.75);
+    border-radius: 14px;
+    margin: 6px 4px;
+    padding: 0 12px;
+    color: @text;
+}
+
+#custom-logo {
+    color: @mauve;
+    font-size: 18px;
+    padding: 0 14px;
+    min-width: 32px;
+}
+
+#group-system {
+    background: transparent;
+    margin: 6px 4px;
+    padding: 0;
+}
+
+#group-system > * {
+    margin: 0 4px;
+}
+
+/* Workspaces -------------------------------------------------------------- */
+#niri-workspaces {
+    padding: 4px 8px;
+}
+
+#niri-workspaces button {
+    background: transparent;
+    color: @subtext0;
+    border-radius: 10px;
+    margin: 0 3px;
+    padding: 4px 10px;
+    transition: all 0.2s ease;
+}
+
+#niri-workspaces button.focused {
+    background: rgba(203, 166, 247, 0.35);
+    color: @text;
+}
+
+#niri-workspaces button.urgent {
+    background: @red;
+    color: @base;
+}
+
+#niri-workspaces button:hover {
+    background: rgba(180, 190, 254, 0.25);
+    color: @text;
+}
+
+/* Active window title */
+#niri-window {
+    padding: 0 16px;
+    min-width: 240px;
+}
+
+#niri-window label {
+    color: @subtext1;
+    font-weight: 500;
+}
+
+/* Audio ------------------------------------------------------------------ */
+#pulseaudio {
+    color: @sky;
+}
+
+#pulseaudio.muted {
+    color: @overlay1;
+}
+
+/* Network ---------------------------------------------------------------- */
+#network {
+    color: @lavender;
+}
+
+#network.disconnected {
+    color: @overlay1;
+}
+
+/* System stats ----------------------------------------------------------- */
+#cpu {
+    color: @mauve;
+}
+
+#memory {
+    color: @flamingo;
+}
+
+#temperature {
+    color: @peach;
+}
+
+#temperature.critical {
+    color: @base;
+    background: rgba(243, 139, 168, 0.85);
+}
+
+#backlight {
+    color: @yellow;
+}
+
+#battery {
+    color: @green;
+}
+
+#battery.charging {
+    color: @teal;
+}
+
+#battery.warning {
+    background: rgba(249, 226, 175, 0.75);
+    color: @crust;
+}
+
+#battery.critical {
+    background: rgba(243, 139, 168, 0.85);
+    color: @crust;
+}
+
+/* Clock ------------------------------------------------------------------ */
+#clock {
+    color: @text;
+    font-weight: 600;
+}
+
+/* Tray ------------------------------------------------------------------- */
+#tray {
+    padding: 0 10px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
+/* Tooltip ---------------------------------------------------------------- */
+tooltip {
+    background: @mantle;
+    border-radius: 12px;
+    border: 1px solid rgba(203, 166, 247, 0.35);
+    padding: 8px 12px;
+}
+
+tooltip label {
+    color: @text;
+}
