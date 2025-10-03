@@ -1,0 +1,5 @@
+[Unit]
+Description=User session lock target
+Documentation=man:systemd.special(7)
+RefuseManualStart=yes
+StopWhenUnneeded=yes

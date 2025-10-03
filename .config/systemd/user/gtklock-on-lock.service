@@ -1,0 +1,11 @@
+[Unit]
+Description=Use gtklock when logind requests session lock
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/home/cyrus/.local/bin/gtklock-random
+
+[Install]
+WantedBy=lock.target
