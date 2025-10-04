@@ -1,7 +1,12 @@
 [Unit]
+Description=Idle manager for niri
 PartOf=graphical-session.target
 After=graphical-session.target
 Requisite=graphical-session.target
+
 [Service]
 ExecStart=/usr/bin/swayidle -w lock '/home/cyrus/.local/bin/gtklock-random' timeout 601 'niri msg action power-off-monitors' timeout 600 '/home/cyrus/.local/bin/gtklock-random' before-sleep '/home/cyrus/.local/bin/gtklock-random'
 Restart=on-failure
+
+[Install]
+WantedBy=graphical-session.target
