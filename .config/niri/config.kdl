@@ -386,6 +386,7 @@ binds {
     Alt+C hotkey-overlay-title="Toggle Browser: zen" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app zen zen-browser"; }
     Alt+W hotkey-overlay-title="Toggle WeChat" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app wechat 'env GTK_IM_MODULE=fcitx QT_IM_MODULE=fcitx XMODIFIERS=@im=fcitx /opt/wechat/wechat'"; }
     Alt+S hotkey-overlay-title="Toggle Wolai" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app wolai 'env GTK_IM_MODULE=fcitx QT_IM_MODULE=fcitx XMODIFIERS=@im=fcitx /opt/wolai/wolai.AppImage --no-sandbox'"; }
+    Alt+R hotkey-overlay-title="Toggle Cherry Studio" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app 'Cherry Studio' cherry-studio"; }
 
     // Always open new terminal
     Mod+Return hotkey-overlay-title="Open New Terminal: kitty" { spawn "kitty"; }
@@ -419,7 +420,8 @@ binds {
     Ctrl+Alt+Shift+Super+R { spawn "waypaper" "--random"; }
 
     // Hide window by moving to next workspace down
-    Alt+H { move-window-to-workspace-down; }
+    Alt+J { move-window-to-workspace-down; }
+    Alt+K { move-window-to-workspace-up; }
 
     // Cycle through windows of the same app
     Mod+N { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-cycle-app-windows next"; }
@@ -432,10 +434,10 @@ binds {
 
     Mod+Q repeat=false { close-window; }
 
-    Mod+Left  { focus-column-left; }
+    // Mod+Left  { focus-column-left; }
     Mod+Down  { focus-window-down; }
     Mod+Up    { focus-window-up; }
-    Mod+Right { focus-column-right; }
+    // Mod+Right { focus-column-right; }
     Mod+H     { focus-column-left; }
     Mod+J     { focus-window-down; }
     Mod+K     { focus-window-up; }
@@ -462,23 +464,35 @@ binds {
     Mod+Ctrl+Home { move-column-to-first; }
     Mod+Ctrl+End  { move-column-to-last; }
 
-    Mod+Shift+Left  { focus-monitor-left; }
-    Mod+Shift+Down  { focus-monitor-down; }
-    Mod+Shift+Up    { focus-monitor-up; }
-    Mod+Shift+Right { focus-monitor-right; }
-    Mod+Shift+H     { focus-monitor-left; }
-    Mod+Shift+J     { focus-monitor-down; }
-    Mod+Shift+K     { focus-monitor-up; }
-    Mod+Shift+L     { focus-monitor-right; }
+    // Mod+Shift+Left  { focus-monitor-left; }
+    // Mod+Shift+Down  { focus-monitor-down; }
+    // Mod+Shift+Up    { focus-monitor-up; }
+    // Mod+Shift+Right { focus-monitor-right; }
+    // Mod+Shift+H     { focus-monitor-left; }
+    // Mod+Shift+J     { focus-monitor-down; }
+    // Mod+Shift+K     { focus-monitor-up; }
+    // Mod+Shift+L     { focus-monitor-right; }
 
-    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
-    Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
-    Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
-    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
-    Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
-    Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
-    Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
-    Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
+    // Focus previous/next monitor
+    Super+Left  { focus-monitor-previous; }
+    Super+Right { focus-monitor-next; }
+
+    // Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+    // Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
+    // Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
+    // Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+    // Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
+    // Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
+    // Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
+    // Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
+
+    // Move column to previous/next monitor
+    Alt+Left  { move-column-to-monitor-previous; }
+    Alt+Right { move-column-to-monitor-next; }
+
+    // Snap floating window to half screen
+    Super+Shift+H { spawn "/home/cyrus/.local/bin/niri-snap-left"; }
+    Super+Shift+L { spawn "/home/cyrus/.local/bin/niri-snap-right"; }
 
     // Alternatively, there are commands to move just a single window:
     // Mod+Shift+Ctrl+Left  { move-window-to-monitor-left; }
@@ -594,7 +608,7 @@ binds {
     // Makes the column "fill the rest of the space".
     Mod+Ctrl+F { expand-column-to-available-width; }
 
-    Mod+C { center-column; }
+    Mod+Semicolon { center-column; }
 
     // Center all fully visible columns on screen.
     Mod+Ctrl+C { center-visible-columns; }
@@ -615,7 +629,7 @@ binds {
     Mod+Shift+Equal { set-window-height "+10%"; }
 
     // Move the focused window between the floating and the tiling layout.
-    Mod+V       { toggle-window-floating; }
+    Mod+Apostrophe { toggle-window-floating; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
 
     // Toggle tabbed column display mode.
@@ -673,4 +687,18 @@ window-rule{
 window-rule {
     match app-id=r#"zen$"#
     opacity 1.0
+}
+window-rule {
+    match app-id="wechat"
+    open-floating true
+}
+window-rule {
+    match is-floating=true
+    draw-border-with-background false
+    border {
+        on
+        width 3
+        active-color "#ff0000"
+        inactive-color "#cc0000"
+    }
 }

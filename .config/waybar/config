@@ -8,8 +8,8 @@
   "margin-left": 12,
   "margin-right": 12,
 
-  "modules-left": ["custom/logo", "niri/workspaces"],
-  "modules-center": ["niri/window"],
+  "modules-left": ["custom/logo", "niri/workspaces", "niri/window"],
+  "modules-center": [],
   "modules-right": ["group/system", "clock", "tray"],
 
   "custom/logo": {
@@ -59,8 +59,9 @@
       "cpu",
       "memory",
       "temperature",
+      "custom/fan",
       "backlight",
-      "battery"
+      "custom/battery"
     ]
   },
 
@@ -114,6 +115,13 @@
     "tooltip-format": "Temperature: {temperatureC}°C"
   },
 
+  "custom/fan": {
+    "exec": "/home/cyrus/.local/bin/waybar-fan",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "sensors"
+  },
+
   "backlight": {
     "device": "intel_backlight",
     "format": "{icon} {percent}%",
@@ -151,6 +159,13 @@
     "tooltip-format": "{timeTo}",
     "tooltip-format-charging": "Charging\n{timeToFull}",
     "tooltip-format-discharging": "Time left: {timeToEmpty}"
+  },
+
+  "custom/battery": {
+    "exec": "/home/cyrus/.local/bin/waybar-battery",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "kitty -e watch -n 1 cat /sys/class/power_supply/BAT0/uevent"
   },
 
   "clock": {

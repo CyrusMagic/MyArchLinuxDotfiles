@@ -62,8 +62,10 @@ window#waybar {
 #cpu,
 #memory,
 #temperature,
+#custom-fan,
 #backlight,
 #battery,
+#custom-battery,
 #clock,
 #tray {
     background: rgba(49, 50, 68, 0.75);
@@ -166,31 +168,48 @@ window#waybar {
     background: rgba(243, 139, 168, 0.85);
 }
 
+#custom-fan {
+    color: @teal;
+}
+
 #backlight {
     color: @yellow;
 }
 
-#battery {
+#battery,
+#custom-battery {
     color: @green;
 }
 
-#battery.charging {
-    color: @teal;
+#battery.Discharging,
+#custom-battery.Discharging,
+#battery.Full,
+#custom-battery.Full,
+#battery.Not.charging,
+#custom-battery.Not.charging {
+    color: @green;
 }
 
-#battery.warning {
+#battery.charging,
+#custom-battery.Charging {
+    color: @sky;
+}
+
+#battery.warning,
+#custom-battery.warning {
     background: rgba(249, 226, 175, 0.75);
     color: @crust;
 }
 
-#battery.critical {
+#battery.critical,
+#custom-battery.critical {
     background: rgba(243, 139, 168, 0.85);
     color: @crust;
 }
 
 /* Clock ------------------------------------------------------------------ */
 #clock {
-    color: @text;
+    color: @lavender;
     font-weight: 600;
 }
 

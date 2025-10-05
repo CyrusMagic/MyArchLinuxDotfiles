@@ -1,17 +1,38 @@
 #!/bin/bash
 
 BAT_PATH="/sys/class/power_supply/BAT0"
+ADP_PATH="/sys/class/power_supply/ADP1"
 
 # 读取数值
 charge_now=$(cat "$BAT_PATH/charge_now")
 charge_full=$(cat "$BAT_PATH/charge_full")
 status=$(cat "$BAT_PATH/status")
+adapter_online=$(cat "$ADP_PATH/online" 2>/dev/null || echo "0")
 
-# 计算百分比
-percentage=$(awk "BEGIN {printf \"%.0f\", ($charge_now / $charge_full) * 100}")
+# 计算百分比，并限制在 0-100 范围内
+percentage=$(awk "BEGIN {
+    pct = ($charge_now / $charge_full) * 100;
+    if (pct > 100) pct = 100;
+    if (pct < 0) pct = 0;
+    printf \"%.0f\", pct;
+}")
 
-# 选择图标
-if [ "$status" = "Charging" ]; then
+# 确定 CSS class
+# 如果状态是Full但电源仍在线，视为Charging状态
+if [ "$status" = "Full" ] && [ "$adapter_online" = "1" ]; then
+    class="Charging"
+else
+    class="$status"
+fi
+
+if [ "$status" != "Charging" ] && [ "$status" != "Full" ] && [ "$percentage" -le 15 ]; then
+    class="critical"
+elif [ "$status" != "Charging" ] && [ "$status" != "Full" ] && [ "$percentage" -le 30 ]; then
+    class="warning"
+fi
+
+# 选择图标（充电时统一用充电图标）
+if [ "$status" = "Charging" ] || ([ "$status" = "Full" ] && [ "$adapter_online" = "1" ]); then
     icon="󰂄"
 elif [ "$percentage" -ge 90 ]; then
     icon="󰂂"
@@ -36,4 +57,4 @@ else
 fi
 
 # 输出
-echo "{\"text\":\"$icon $percentage%\", \"tooltip\":\"Battery: $percentage% ($status)\", \"class\":\"$status\", \"percentage\":$percentage}"
+echo "{\"text\":\"$icon $percentage%\", \"tooltip\":\"Battery: $percentage% ($status)\", \"class\":\"$class\", \"percentage\":$percentage}"
