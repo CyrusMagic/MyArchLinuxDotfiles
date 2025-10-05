@@ -18,12 +18,8 @@
   ;; Capslock: 单击为 Esc，长按为 Hyper (Ctrl+Alt+Shift+Meta)
   caps (tap-hold 200 esc (around lctl (around lalt (around lsft lmet))))
 
-  ;; Cmd 按住时切入 cmd 层，松开再回 base 层
-  cmd-hold (around (layer-toggle cmd) (layer-toggle cmd))
-
-  ;; 左右 Cmd：点一下发 Super，按住进入 cmd 层
-  lcmd (tap-hold-next 200 lmet @cmd-hold)
-  rcmd (tap-hold-next 200 rmet @cmd-hold)
+  ;; Meta/Cmd 键切换到 cmd 层，同时向系统发送 Super
+  met (around lmet (layer-toggle cmd))
 )
 
 (deflayer base
@@ -31,7 +27,7 @@
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   @caps a   s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl @lcmd lalt         spc            ralt @rcmd rctl
+  lctl @met lalt          spc            ralt rmet rctl
   left down up right
 )
 
@@ -41,7 +37,7 @@
   M-esc M-1  M-2  M-3  M-4  M-5  M-6  M-7  M-8  M-9  M-0  M--  M-=  M-bspc
   M-tab M-q  M-w  M-e  M-r  M-t  M-y  M-u  M-i  M-o  M-p  M-[  M-]  M-\
   _     C-a  M-s  M-d  M-f  M-g  M-h  M-j  M-k  M-l  M-;  M-'  M-ret
-  _     C-z  C-x  C-c  C-v  M-b  M-n  M-m  M-,  M-.  M-/  _
+  _     C-z  M-x  C-c  C-v  M-b  M-n  M-m  M-,  M-.  M-/  _
   _     _    _              M-spc          _    _    _
   M-left M-down M-up M-right
 )

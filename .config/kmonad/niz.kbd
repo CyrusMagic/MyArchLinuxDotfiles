@@ -1,5 +1,5 @@
 (defcfg
-  input  (device-file "/dev/input/by-id/usb-Heng_Yu_Technology_Poker-event-kbd")
+  input  (device-file "/dev/input/by-id/usb-Milsky_mini84_MS2021070001-event-kbd")
   output (uinput-sink "KMonad output")
   fallthrough true
   allow-cmd false
