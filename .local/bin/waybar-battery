@@ -1,0 +1,39 @@
+#!/bin/bash
+
+BAT_PATH="/sys/class/power_supply/BAT0"
+
+# 读取数值
+charge_now=$(cat "$BAT_PATH/charge_now")
+charge_full=$(cat "$BAT_PATH/charge_full")
+status=$(cat "$BAT_PATH/status")
+
+# 计算百分比
+percentage=$(awk "BEGIN {printf \"%.0f\", ($charge_now / $charge_full) * 100}")
+
+# 选择图标
+if [ "$status" = "Charging" ]; then
+    icon="󰂄"
+elif [ "$percentage" -ge 90 ]; then
+    icon="󰂂"
+elif [ "$percentage" -ge 80 ]; then
+    icon="󰂁"
+elif [ "$percentage" -ge 70 ]; then
+    icon="󰂀"
+elif [ "$percentage" -ge 60 ]; then
+    icon="󰁿"
+elif [ "$percentage" -ge 50 ]; then
+    icon="󰁾"
+elif [ "$percentage" -ge 40 ]; then
+    icon="󰁽"
+elif [ "$percentage" -ge 30 ]; then
+    icon="󰁼"
+elif [ "$percentage" -ge 20 ]; then
+    icon="󰁻"
+elif [ "$percentage" -ge 10 ]; then
+    icon="󰁺"
+else
+    icon="󰂎"
+fi
+
+# 输出
+echo "{\"text\":\"$icon $percentage%\", \"tooltip\":\"Battery: $percentage% ($status)\", \"class\":\"$status\", \"percentage\":$percentage}"

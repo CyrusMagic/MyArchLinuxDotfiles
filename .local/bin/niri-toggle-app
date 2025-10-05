@@ -1,0 +1,23 @@
+#!/bin/bash
+# niri-toggle-app - Toggle application: focus if running, launch if not
+# Usage: niri-toggle-app <app-id> <command>
+
+APP_ID="$1"
+COMMAND="$2"
+
+if [ -z "$APP_ID" ] || [ -z "$COMMAND" ]; then
+    echo "Usage: niri-toggle-app <app-id> <command>"
+    echo "Example: niri-toggle-app kitty kitty"
+    exit 1
+fi
+
+# Get window ID for the app
+WINDOW_ID=$(niri msg windows | grep -B 5 "App ID: \"$APP_ID\"" | grep "Window ID" | head -1 | awk '{print $3}' | tr -d ':')
+
+if [ -n "$WINDOW_ID" ]; then
+    # App is running, focus it
+    niri msg action focus-window --id "$WINDOW_ID"
+else
+    # App is not running, launch it
+    $COMMAND &
+fi

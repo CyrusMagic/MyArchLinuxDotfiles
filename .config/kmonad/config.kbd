@@ -1,0 +1,40 @@
+(defcfg
+  input  (device-file "/dev/input/by-path/pci-0000:e6:00.1-usb-0:5:1.1-event-kbd")
+  output (uinput-sink "KMonad output")
+  fallthrough true
+  allow-cmd false
+)
+
+(defsrc
+  esc  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt rmet rctl
+)
+
+(defalias
+  ;; Capslock: 单击为 Esc，长按为 Hyper (Ctrl+Alt+Shift+Meta)
+  caps (tap-hold 200 esc (around lctl (around lalt (around lsft lmet))))
+
+  ;; Meta/Cmd 键切换到 cmd 层
+  met (layer-toggle cmd)
+)
+
+(deflayer base
+  esc  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  @caps a   s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl @met lalt          spc            ralt rmet rctl
+)
+
+;; 当 Cmd/Meta 键被按下时的层
+;; c/v/a/z 映射为 Ctrl+C/V/A/Z，其他键显式映射为 Meta+键
+(deflayer cmd
+  M-esc M-1  M-2  M-3  M-4  M-5  M-6  M-7  M-8  M-9  M-0  M--  M-=  M-bspc
+  M-tab M-q  M-w  M-e  M-r  M-t  M-y  M-u  M-i  M-o  M-p  M-[  M-]  M-\
+  _     C-a  M-s  M-d  M-f  M-g  M-h  M-j  M-k  M-l  M-;  M-'  M-ret
+  _     C-z  M-x  C-c  C-v  M-b  M-n  M-m  M-,  M-.  M-/  _
+  _     _    _              M-spc          _    _    _
+)

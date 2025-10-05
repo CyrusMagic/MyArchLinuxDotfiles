@@ -124,6 +124,9 @@
   },
 
   "battery": {
+    "bat": "BAT0",
+    "adapter": "ADP1",
+    "interval": 60,
     "states": {
       "good": 80,
       "warning": 30,
@@ -132,7 +135,7 @@
     "format": "{icon} {capacity}%",
     "format-charging": "󰂄 {capacity}%",
     "format-plugged": "󰂄 {capacity}%",
-    "format-alt": "{timeTo}",
+    "format-alt": "{time} {capacity}%",
     "format-icons": [
       "󰂎",
       "󰁺",

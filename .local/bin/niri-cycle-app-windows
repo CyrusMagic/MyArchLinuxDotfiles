@@ -1,0 +1,48 @@
+#!/bin/bash
+# niri-cycle-app-windows - Cycle through windows of the same app
+# Usage: niri-cycle-app-windows [next|prev]
+
+DIRECTION="${1:-next}"
+
+# Get current focused window
+CURRENT_WINDOW=$(niri msg windows | grep "(focused)" | awk '{print $3}' | tr -d ':')
+
+if [ -z "$CURRENT_WINDOW" ]; then
+    echo "No focused window found"
+    exit 1
+fi
+
+# Get App ID of current window
+CURRENT_APP_ID=$(niri msg windows | grep -A 10 "Window ID $CURRENT_WINDOW:" | grep "App ID:" | head -1 | awk -F'"' '{print $2}')
+
+if [ -z "$CURRENT_APP_ID" ]; then
+    echo "Could not determine App ID"
+    exit 1
+fi
+
+# Get all window IDs with the same App ID
+WINDOW_IDS=($(niri msg windows | grep -B 5 "App ID: \"$CURRENT_APP_ID\"" | grep "Window ID" | awk '{print $3}' | tr -d ':'))
+
+# If only one window, nothing to cycle
+if [ ${#WINDOW_IDS[@]} -le 1 ]; then
+    exit 0
+fi
+
+# Find current window index
+CURRENT_INDEX=-1
+for i in "${!WINDOW_IDS[@]}"; do
+    if [ "${WINDOW_IDS[$i]}" = "$CURRENT_WINDOW" ]; then
+        CURRENT_INDEX=$i
+        break
+    fi
+done
+
+# Calculate next/prev index
+if [ "$DIRECTION" = "next" ]; then
+    NEXT_INDEX=$(( (CURRENT_INDEX + 1) % ${#WINDOW_IDS[@]} ))
+else
+    NEXT_INDEX=$(( (CURRENT_INDEX - 1 + ${#WINDOW_IDS[@]}) % ${#WINDOW_IDS[@]} ))
+fi
+
+# Focus the next/prev window
+niri msg action focus-window --id "${WINDOW_IDS[$NEXT_INDEX]}"

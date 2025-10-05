@@ -274,6 +274,7 @@ layout {
 // spawn-at-startup "waybar"
 spawn-at-startup "fcitx5"
 spawn-at-startup "swaync"
+spawn-at-startup "blueman-applet"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -380,9 +381,15 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
-    //Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
-    Mod+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
-    Mod+B hotkey-overlay-title="Open Zen-browser: zen" { spawn "zen-browser"; }
+    // Alt as application toggle/jump prefix
+    Alt+Return hotkey-overlay-title="Toggle Terminal: kitty" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app kitty kitty"; }
+    Alt+C hotkey-overlay-title="Toggle Browser: zen" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app zen zen-browser"; }
+    Alt+W hotkey-overlay-title="Toggle WeChat" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app wechat 'env GTK_IM_MODULE=fcitx QT_IM_MODULE=fcitx XMODIFIERS=@im=fcitx /opt/wechat/wechat'"; }
+    Alt+S hotkey-overlay-title="Toggle Wolai" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app wolai 'env GTK_IM_MODULE=fcitx QT_IM_MODULE=fcitx XMODIFIERS=@im=fcitx /opt/wolai/wolai.AppImage --no-sandbox'"; }
+
+    // Always open new terminal
+    Mod+Return hotkey-overlay-title="Open New Terminal: kitty" { spawn "kitty"; }
+
     Mod+Space hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: gtklock" { spawn "/home/cyrus/.local/bin/gtklock-random"; }
 
@@ -405,10 +412,18 @@ binds {
     XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
 
-    // Custom brightness controls with Alt+U and Alt+I
-    Alt+U allow-when-locked=true { spawn "brightnessctl" "set" "+10%"; }
-    Alt+I allow-when-locked=true { spawn "brightnessctl" "set" "10%-"; }
-    Alt+R { spawn "waypaper" "--random"; }
+    // Custom brightness controls with Hyper (CapsLock)
+    Ctrl+Alt+Shift+Super+U allow-when-locked=true { spawn "brightnessctl" "set" "+10%"; }
+    Ctrl+Alt+Shift+Super+I allow-when-locked=true { spawn "brightnessctl" "set" "10%-"; }
+    // Hyper+R to change wallpaper (CapsLock+R)
+    Ctrl+Alt+Shift+Super+R { spawn "waypaper" "--random"; }
+
+    // Hide window by moving to next workspace down
+    Alt+H { move-window-to-workspace-down; }
+
+    // Cycle through windows of the same app
+    Mod+N { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-cycle-app-windows next"; }
+    Mod+P { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-cycle-app-windows prev"; }
 
     // Open/close the Overview: a zoomed-out view of workspaces and windows.
     // You can also move the mouse into the top-left hot corner,
@@ -618,7 +633,7 @@ binds {
 
     Print { screenshot; }
     Ctrl+Print { screenshot-screen; }
-    Alt+Print { screenshot-window; }
+    Mod+Print { screenshot-window; }
 
     // Applications such as remote-desktop clients and software KVM switches may
     // request that niri stops processing the keyboard shortcuts defined here
@@ -639,12 +654,9 @@ binds {
     Mod+Shift+P { power-off-monitors; }
 }
 
-// enable electron app and fcitx5 input method
+// enable electron app
 environment{
     ELECTRON_OZONE_PLATFORM_HINT "auto"
-    GTK_IM_MODULE "fcitx"
-    QT_IM_MODULE "fcitx"
-    XMODIFIERS "@im=fcitx"
 }
 window-rule{
     match app-id="Nutstore"
@@ -657,4 +669,8 @@ window-rule{
     //min-height 100
     max-width 500
     //max-height 100
+}
+window-rule {
+    match app-id=r#"zen$"#
+    opacity 1.0
 }

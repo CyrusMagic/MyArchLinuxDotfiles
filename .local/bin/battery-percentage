@@ -1,0 +1,5 @@
+#!/bin/bash
+charge_now=$(cat /sys/class/power_supply/BAT0/charge_now)
+charge_full=$(cat /sys/class/power_supply/BAT0/charge_full)
+percentage=$(awk "BEGIN {printf \"%.0f\", ($charge_now / $charge_full) * 100}")
+echo "$percentage"
