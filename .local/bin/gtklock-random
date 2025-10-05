@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Avoid spawning multiple gtklock instances when swayidle/logind both call this
+if pgrep -u "$USER" -x gtklock >/dev/null; then
+    exit 0
+fi
+
 WALL_DIR="${GTKLOCK_WALL_DIR:-$HOME/Pictures/wallpaper}"
 CONFIG_PATH="$HOME/.config/gtklock/config.ini"
 

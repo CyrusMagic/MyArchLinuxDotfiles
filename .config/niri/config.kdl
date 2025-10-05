@@ -474,8 +474,12 @@ binds {
     // Mod+Shift+L     { focus-monitor-right; }
 
     // Focus previous/next monitor
-    Super+Left  { focus-monitor-previous; }
-    Super+Right { focus-monitor-next; }
+    // Super+Left  { focus-monitor-previous; }
+    // Super+Right { focus-monitor-next; }
+    Super+Left  { focus-monitor-left; }
+    Super+Right { focus-monitor-right; }
+    Mod+Left    { focus-monitor-left; }
+    Mod+Right   { focus-monitor-right; }
 
     // Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
     // Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }

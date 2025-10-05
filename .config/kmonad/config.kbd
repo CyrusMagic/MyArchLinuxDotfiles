@@ -11,14 +11,15 @@
   caps a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
   lctl lmet lalt           spc            ralt rmet rctl
+  left down up right
 )
 
 (defalias
   ;; Capslock: 单击为 Esc，长按为 Hyper (Ctrl+Alt+Shift+Meta)
   caps (tap-hold 200 esc (around lctl (around lalt (around lsft lmet))))
 
-  ;; Meta/Cmd 键切换到 cmd 层
-  met (layer-toggle cmd)
+  ;; Meta/Cmd 键切换到 cmd 层，同时向系统发送 Super
+  met (around lmet (layer-toggle cmd))
 )
 
 (deflayer base
@@ -27,6 +28,7 @@
   @caps a   s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
   lctl @met lalt          spc            ralt rmet rctl
+  left down up right
 )
 
 ;; 当 Cmd/Meta 键被按下时的层
@@ -37,4 +39,5 @@
   _     C-a  M-s  M-d  M-f  M-g  M-h  M-j  M-k  M-l  M-;  M-'  M-ret
   _     C-z  M-x  C-c  C-v  M-b  M-n  M-m  M-,  M-.  M-/  _
   _     _    _              M-spc          _    _    _
+  M-left M-down M-up M-right
 )
