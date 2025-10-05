@@ -1,0 +1,14 @@
+[Unit]
+Description=KMonad Poker keyboard configuration
+Documentation=https://github.com/kmonad/kmonad
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/kmonad /home/cyrus/.config/kmonad/poker.kbd
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

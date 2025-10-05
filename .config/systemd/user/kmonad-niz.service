@@ -1,0 +1,14 @@
+[Unit]
+Description=KMonad NIZ mini84 keyboard configuration
+Documentation=https://github.com/kmonad/kmonad
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/kmonad /home/cyrus/.config/kmonad/niz.kbd
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
