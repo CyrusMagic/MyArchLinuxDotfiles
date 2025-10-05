@@ -1,5 +1,5 @@
 (defcfg
-  input  (device-file "/dev/input/by-id/usb-Apple_Inc._Apple_Internal_Keyboard___Trackpad_FM70113008VN1R0AP+TRZ-if01-event-kbd")
+  input  (device-file "/dev/input/by-id/usb-Heng_Yu_Technology_Poker-event-kbd")
   output (uinput-sink "KMonad output")
   fallthrough true
   allow-cmd false
