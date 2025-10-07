@@ -393,9 +393,12 @@ binds {
     // Cherry Studio app_id observed as "CherryStudio"; keep alternates for safety. Focus if exists, else launch.
     Alt+R hotkey-overlay-title="Toggle Cherry Studio" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app 'CherryStudio|cherry-studio|Cherry Studio' cherry-studio"; }
     Alt+Z hotkey-overlay-title="Toggle Zotero" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app 'Zotero|zotero|org.zotero.Zotero' /usr/bin/zotero"; }
+    Mod+Return hotkey-overlay-title="Open New Terminal: kitty" { spawn "kitty"; }
 
     // Always open new terminal
-    Mod+Return hotkey-overlay-title="Open New Terminal: kitty" { spawn "kitty"; }
+    Alt+Shift+E hotkey-overlay-title="Edit niri config" { spawn "kitty" "-e" "nvim" "/home/cyrus/.config/niri/config.kdl"; }
+//     Alt+Shift+C hotkey-overlay-title="Kitty: yazi + gc" { spawn "bash" "-lc" "sock=/tmp/kitty-yazi-$PPID-$RANDOM; kitty -o allow_remote_control=yes --listen-on unix:$sock --title yazi-gc & for i in $(seq 1 100); do kitty @ --to unix:$sock ls >/dev/null 2>&1 && break; sleep 0.05; done; kitty @ --to unix:$sock send-text \"yazi\\n\"; sleep 0.1; kitty @ --to unix:$sock send-text \"gc\""; }
+    Alt+Shift+C hotkey-overlay-title="Yazi .config" { spawn "kitty" "-e" "yazi" "/home/cyrus/.config"; }
 
     Mod+Space hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: gtklock" { spawn "/home/cyrus/.local/bin/gtklock-random"; }
@@ -429,6 +432,7 @@ binds {
     Ctrl+Alt+Shift+Super+I allow-when-locked=true { spawn "brightnessctl" "set" "10%-"; }
     // Hyper+R to change wallpaper (CapsLock+R)
     Ctrl+Alt+Shift+Super+R { spawn "waypaper" "--random"; }
+    Ctrl+Alt+Shift+Super+X { spawn "flameshot" "gui"; }
 
     // Hide window by moving to next workspace down
     Alt+J { move-window-to-workspace-down; }
@@ -648,7 +652,7 @@ binds {
     // Mod+Space       { switch-layout "next"; }
     // Mod+Shift+Space { switch-layout "prev"; }
 
-    Print { screenshot; }
+    Print { spawn "flameshot" "gui"; }
     Ctrl+Print { screenshot-screen; }
     Mod+Print { screenshot-window; }
 
@@ -668,7 +672,7 @@ binds {
 
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
-    Mod+Shift+P { power-off-monitors; }
+//     Mod+Shift+P { power-off-monitors; }
 
     // Fine control for floating windows
     // - Move: Mod+Ctrl+Shift + Arrow keys moves the focused floating window by 20px
@@ -719,4 +723,11 @@ window-rule {
         active-color "#ff0000"
         inactive-color "#cc0000"
     }
+}
+
+// Float Flameshot windows by default
+window-rule {
+    // Match native and Flatpak app-ids
+    match app-id=r#"(?:^flameshot$|^org\.flameshot\.Flameshot$)"#
+    open-floating true
 }

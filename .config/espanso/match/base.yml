@@ -11,6 +11,9 @@ matches:
     replace: "iOe9Z1xgdKf82b5A6INLyF4p03Q7uRvz"
     label: "pwd"
 
+  - trigger: "sfz="
+    replace: "370282199606095113"
+
   - trigger: "sig/"
     word: false
     replace: |-
