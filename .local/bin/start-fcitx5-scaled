@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Scale fcitx5 Classic UI to match fractional display scale (~1.5)
+export QT_FONT_DPI=${QT_FONT_DPI:-144}
+# If you prefer using fractional scale instead, uncomment:
+# export QT_SCALE_FACTOR=${QT_SCALE_FACTOR:-1.5}
+exec fcitx5 "$@"

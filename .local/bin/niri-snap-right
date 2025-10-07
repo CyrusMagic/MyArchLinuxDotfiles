@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Get focused window info - only the focused window block
+window_info=$(niri msg windows | awk '/\(focused\)/,/^$/ {print}' | head -20)
+
+# Check if window is floating
+if echo "$window_info" | grep -q "Is floating: yes"; then
+    # First, set window size (slightly less than 50% to leave gap in middle)
+    niri msg action set-window-width "50%-4"
+    niri msg action set-window-height "100%-16"
+
+    # Wait a moment for size to apply
+    sleep 0.05
+
+    # Get updated window info after resize
+    window_info=$(niri msg windows | awk '/\(focused\)/,/^$/ {print}' | head -20)
+    current_pos=$(echo "$window_info" | grep "Workspace-view position:" | head -1 | awk '{print $3, $4}')
+    current_x=$(echo $current_pos | cut -d',' -f1 | cut -d'.' -f1)
+    current_y=$(echo $current_pos | cut -d',' -f2 | cut -d'.' -f1)
+
+    # Get window width
+    window_width=$(echo "$window_info" | grep "Window size:" | head -1 | awk '{print $3}' | cut -d'.' -f1)
+
+    # Target position: right half with gap
+    # Left window is at x=8, width=50%-4
+    # Right window should start at: window_width + left_gap + middle_gap + extra
+    gap=8
+    target_x=$((window_width + gap + gap + 4))
+    target_y=$((47 + gap))
+
+    # Calculate relative movement with proper sign
+    move_x=$((target_x - current_x))
+    move_y=$((target_y - current_y))
+
+    # Add + or - prefix for the move command
+    if [ $move_x -ge 0 ]; then
+        move_x_str="+$move_x"
+    else
+        move_x_str="$move_x"
+    fi
+
+    if [ $move_y -ge 0 ]; then
+        move_y_str="+$move_y"
+    else
+        move_y_str="$move_y"
+    fi
+
+    niri msg action move-floating-window -x "$move_x_str" -y "$move_y_str"
+else
+    echo "Current window is not floating"
+fi

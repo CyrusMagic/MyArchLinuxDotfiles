@@ -7,7 +7,7 @@ matches:
     replace: "dingyi18@mail.ucas.edu.cn"
     label: "邮箱"
 
-  - trigger: "v100pwd="
+  - trigger: "v100="
     replace: "iOe9Z1xgdKf82b5A6INLyF4p03Q7uRvz"
     label: "pwd"
 

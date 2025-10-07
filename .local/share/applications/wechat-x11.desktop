@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=WeChat (X11, Scaled)
+Comment=WeChat using X11 backend with software rendering and HiDPI scaling
+Exec=/home/cyrus/.local/bin/run-electron-x11 /opt/wechat/wechat
+Icon=wechat
+Terminal=false
+Type=Application
+Categories=Network;Chat;InstantMessaging;
+StartupNotify=true

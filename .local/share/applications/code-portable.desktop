@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Visual Studio Code Portable
+Comment=VS Code portable build
+Exec=/home/cyrus/apps/vscode-1.85.2/code-portable.sh %F
+Icon=visual-studio-code
+Terminal=false
+Type=Application
+Categories=Development;IDE;TextEditor;
+StartupNotify=true
+# App id is set by launcher script: WAYLAND_APP_ID=code-portable

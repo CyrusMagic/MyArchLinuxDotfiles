@@ -1,0 +1,2 @@
+#!/bin/bash
+nohup /home/cyrus/apps/vscode-1.85.2/code-portable.sh "$@" >$HOME/.cache/code-portable.log 2>&1 &

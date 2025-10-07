@@ -1,23 +1,76 @@
 #!/bin/bash
 # niri-toggle-app - Toggle application: focus if running, launch if not
-# Usage: niri-toggle-app <app-id> <command>
+# Usage: niri-toggle-app <app-id> <command> [cmdline-match]
 
 APP_ID="$1"
 COMMAND="$2"
+CMD_MATCH="$3"
 
 if [ -z "$APP_ID" ] || [ -z "$COMMAND" ]; then
-    echo "Usage: niri-toggle-app <app-id> <command>"
+    echo "Usage: niri-toggle-app <app-id> <command> [cmdline-match]"
     echo "Example: niri-toggle-app kitty kitty"
     exit 1
 fi
 
-# Get window ID for the app
-WINDOW_ID=$(niri msg windows | grep -B 5 "App ID: \"$APP_ID\"" | grep "Window ID" | head -1 | awk '{print $3}' | tr -d ':')
+# Collect window info robustly. Prefer JSON via jq; fallback to text parsing.
+if command -v jq >/dev/null 2>&1; then
+    WINDOWS=$(niri msg -j windows 2>/dev/null | jq -r '.[] | [( .id|tostring ), ( .pid|tostring ), ( .app_id // "" )] | @tsv' || true)
+else
+    WINDOWS=$(niri msg windows | awk 'BEGIN{id="";pid="";appid=""}
+        /^Window ID/ {id=$3; sub(":","",id)}
+        /  App ID:/ {appid=$3; gsub(/"/,"",appid)}
+        /  PID:/ {pid=$2}
+        /^$/ { if(id!="" && appid!=""){print id"\t"pid"\t"appid; id="";pid="";appid=""} }
+        END { if(id!="" && appid!=""){print id"\t"pid"\t"appid} }')
+fi
+
+WINDOW_ID=""
+
+# Split APP_ID into alternatives, separated by '|' or ','
+IFS='|,' read -r -a APP_IDS <<< "$APP_ID"
+
+# 1) First try: exact App ID match (optionally filter by CMD_MATCH)
+while IFS=$'\t' read -r ID PID APP; do
+    [ -z "$ID" ] && continue
+    for A in "${APP_IDS[@]}"; do
+        [ "$APP" = "$A" ] || continue
+        if [ -n "$CMD_MATCH" ]; then
+            if [ -n "$PID" ] && [ -r "/proc/$PID/cmdline" ]; then
+                if tr '\0' ' ' < "/proc/$PID/cmdline" | grep -Fq "$CMD_MATCH"; then
+                    WINDOW_ID="$ID"; break 2
+                fi
+            fi
+        else
+            WINDOW_ID="$ID"; break 2
+        fi
+    done
+done <<< "$WINDOWS"
+
+# 2) Fallback A: if strict match failed, try by App ID only (ignore CMD_MATCH)
+if [ -z "$WINDOW_ID" ]; then
+    while IFS=$'\t' read -r ID PID APP; do
+        [ -z "$ID" ] && continue
+        for A in "${APP_IDS[@]}"; do
+            [ "$APP" = "$A" ] || continue
+            WINDOW_ID="$ID"; break 2
+        done
+    done <<< "$WINDOWS"
+fi
+
+# 2) Fallback B: if still not found and CMD_MATCH is given, match by process cmdline (ignore App ID)
+if [ -z "$WINDOW_ID" ] && [ -n "$CMD_MATCH" ]; then
+    while IFS=$'\t' read -r ID PID APP; do
+        [ -z "$ID" ] && continue
+        if [ -n "$PID" ] && [ -r "/proc/$PID/cmdline" ]; then
+            if tr '\0' ' ' < "/proc/$PID/cmdline" | grep -Fq "$CMD_MATCH"; then
+                WINDOW_ID="$ID"; break
+            fi
+        fi
+    done <<< "$WINDOWS"
+fi
 
 if [ -n "$WINDOW_ID" ]; then
-    # App is running, focus it
     niri msg action focus-window --id "$WINDOW_ID"
 else
-    # App is not running, launch it
     $COMMAND &
 fi

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Wolai (X11, Scaled)
+Comment=Wolai using X11 backend with software rendering and HiDPI scaling
+Exec=/home/cyrus/.local/bin/run-electron-x11 /opt/wolai/wolai.AppImage --no-sandbox
+Icon=wolai
+Terminal=false
+Type=Application
+Categories=Office;Utility;
+StartupNotify=true

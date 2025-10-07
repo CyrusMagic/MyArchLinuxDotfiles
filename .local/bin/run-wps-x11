@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Force X11 backend (XWayland) for stability
+export QT_QPA_PLATFORM=xcb
+# Prefer software rendering to avoid GPU/driver glitches (duplicated frames)
+export QT_OPENGL=software
+export LIBGL_ALWAYS_SOFTWARE=1
+export LIBGL_DRI3_DISABLE=1
+export XWAYLAND_NO_GLAMOR=1
+# HiDPI: either fractional via scale factor (may trigger bugs), or integer DPI
+# Try rounding to nearest-lower integer to reduce artifacts
+export QT_SCALE_FACTOR_ROUNDING_POLICY=${QT_SCALE_FACTOR_ROUNDING_POLICY:-RoundPreferFloor}
+# Option A: fractional scale (uncomment to try)
+# export QT_SCALE_FACTOR=${QT_SCALE_FACTOR:-1.5}
+# Option B: integer scale via font DPI (safer). 96 * 1.5 = 144
+export QT_FONT_DPI=${QT_FONT_DPI:-144}
+# IME
+export GTK_IM_MODULE=${GTK_IM_MODULE:-fcitx}
+export QT_IM_MODULE=${QT_IM_MODULE:-fcitx}
+export XMODIFIERS=${XMODIFIERS:-@im=fcitx}
+exec /usr/bin/wps "$@"

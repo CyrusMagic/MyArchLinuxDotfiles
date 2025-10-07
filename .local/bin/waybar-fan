@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Get fan speeds from applesmc
+fan1=$(sensors -u applesmc-acpi-0 2>/dev/null | grep "fan1_input" | awk '{printf "%.0f", $2}')
+fan2=$(sensors -u applesmc-acpi-0 2>/dev/null | grep "fan2_input" | awk '{printf "%.0f", $2}')
+
+# If sensors failed, show error
+if [ -z "$fan1" ] || [ -z "$fan2" ]; then
+    echo '{"text":"N/A","tooltip":"Fan data unavailable"}'
+    exit 0
+fi
+
+# Calculate average
+avg=$(( (fan1 + fan2) / 2 ))
+
+# Output JSON for waybar
+echo "{\"text\":\" $avg RPM\",\"tooltip\":\"Fan 1: $fan1 RPM\\nFan 2: $fan2 RPM\"}"

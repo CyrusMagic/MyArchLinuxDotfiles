@@ -272,6 +272,7 @@ layout {
 // This line starts waybar, a commonly used bar for Wayland compositors.
 // comment waybar as we already add to systemd
 // spawn-at-startup "waybar"
+spawn-at-startup "sh" "-c" "xrdb -merge ~/.Xresources"
 spawn-at-startup "fcitx5"
 spawn-at-startup "swaync"
 spawn-at-startup "blueman-applet"
@@ -359,7 +360,7 @@ window-rule {
 }
 window-rule {
     draw-border-with-background false
-    opacity 0.9
+    opacity 0.95
 
 }
 
@@ -384,9 +385,14 @@ binds {
     // Alt as application toggle/jump prefix
     Alt+Return hotkey-overlay-title="Toggle Terminal: kitty" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app kitty kitty"; }
     Alt+C hotkey-overlay-title="Toggle Browser: zen" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app zen zen-browser"; }
-    Alt+W hotkey-overlay-title="Toggle WeChat" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app wechat 'env GTK_IM_MODULE=fcitx QT_IM_MODULE=fcitx XMODIFIERS=@im=fcitx /opt/wechat/wechat'"; }
-    Alt+S hotkey-overlay-title="Toggle Wolai" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app wolai 'env GTK_IM_MODULE=fcitx QT_IM_MODULE=fcitx XMODIFIERS=@im=fcitx /opt/wolai/wolai.AppImage --no-sandbox'"; }
-    Alt+R hotkey-overlay-title="Toggle Cherry Studio" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app 'Cherry Studio' cherry-studio"; }
+    Alt+X hotkey-overlay-title="Toggle Code" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app code code"; }
+    Alt+B hotkey-overlay-title="Toggle Portable Code" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app 'Code|code-portable' 'gtk-launch code-portable' '/home/cyrus/apps/vscode-1.85.2/data/user-data'"; }
+    Alt+W hotkey-overlay-title="Toggle WeChat" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app wechat 'gtk-launch wechat-x11'"; }
+    Alt+E hotkey-overlay-title="Toggle WPS" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app 'wps|wps-office-wps|wps-office-prometheus' 'gtk-launch wps-office-x11' 'office6/wps'"; }
+    Alt+S hotkey-overlay-title="Toggle Wolai" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app wolai 'gtk-launch wolai-x11' 'wolai.AppImage'"; }
+    // Cherry Studio app_id observed as "CherryStudio"; keep alternates for safety. Focus if exists, else launch.
+    Alt+R hotkey-overlay-title="Toggle Cherry Studio" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app 'CherryStudio|cherry-studio|Cherry Studio' cherry-studio"; }
+    Alt+Z hotkey-overlay-title="Toggle Zotero" { spawn "sh" "-c" "/home/cyrus/.local/bin/niri-toggle-app 'Zotero|zotero|org.zotero.Zotero' /usr/bin/zotero"; }
 
     // Always open new terminal
     Mod+Return hotkey-overlay-title="Open New Terminal: kitty" { spawn "kitty"; }
@@ -406,6 +412,11 @@ binds {
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
     XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
     XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+
+    // Hyper 音量快捷键（CapsLock 作为 Hyper）
+    Ctrl+Alt+Shift+Super+Equal { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    Ctrl+Alt+Shift+Super+Minus { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    Ctrl+Alt+Shift+Super+0     { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
 
     // Example brightness key mappings for brightnessctl.
     // You can use regular spawn with multiple arguments too (to avoid going through "sh"),
@@ -430,14 +441,10 @@ binds {
     // Open/close the Overview: a zoomed-out view of workspaces and windows.
     // You can also move the mouse into the top-left hot corner,
     // or do a four-finger swipe up on a touchpad.
-    Mod+O repeat=false { toggle-overview; }
+    Mod+Tab repeat=false { toggle-overview; }
 
     Mod+Q repeat=false { close-window; }
 
-    // Mod+Left  { focus-column-left; }
-    Mod+Down  { focus-window-down; }
-    Mod+Up    { focus-window-up; }
-    // Mod+Right { focus-column-right; }
     Mod+H     { focus-column-left; }
     Mod+J     { focus-window-down; }
     Mod+K     { focus-window-up; }
@@ -464,22 +471,13 @@ binds {
     Mod+Ctrl+Home { move-column-to-first; }
     Mod+Ctrl+End  { move-column-to-last; }
 
-    // Mod+Shift+Left  { focus-monitor-left; }
-    // Mod+Shift+Down  { focus-monitor-down; }
-    // Mod+Shift+Up    { focus-monitor-up; }
-    // Mod+Shift+Right { focus-monitor-right; }
-    // Mod+Shift+H     { focus-monitor-left; }
-    // Mod+Shift+J     { focus-monitor-down; }
-    // Mod+Shift+K     { focus-monitor-up; }
-    // Mod+Shift+L     { focus-monitor-right; }
-
     // Focus previous/next monitor
-    // Super+Left  { focus-monitor-previous; }
-    // Super+Right { focus-monitor-next; }
-    Super+Left  { focus-monitor-left; }
-    Super+Right { focus-monitor-right; }
-    Mod+Left    { focus-monitor-left; }
-    Mod+Right   { focus-monitor-right; }
+    Super+Left  { focus-monitor-previous; }
+    Super+Right { focus-monitor-next; }
+
+    // move workspace to 
+    Mod+Shift+Left { move-workspace-to-monitor-previous; }
+    Mod+Shift+Right { move-workspace-to-monitor-next; }
 
     // Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
     // Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
@@ -510,6 +508,7 @@ binds {
     Mod+Page_Up        { focus-workspace-up; }
     Mod+U              { focus-workspace-down; }
     Mod+I              { focus-workspace-up; }
+    Mod+O              { focus-window-previous; }
     Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
     Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
     Mod+Ctrl+U         { move-column-to-workspace-down; }
@@ -670,6 +669,21 @@ binds {
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
+
+    // Fine control for floating windows
+    // - Move: Mod+Ctrl+Shift + Arrow keys moves the focused floating window by 20px
+    // - Resize: Mod+Alt+Shift + Arrow keys resizes the focused floating window by 20px
+    // Notes: Only affects floating windows; use Mod+Apostrophe to toggle floating.
+    Mod+Ctrl+Shift+Left  { spawn "niri" "msg" "action" "move-floating-window" "-x" "-20"; }
+    Mod+Ctrl+Shift+Right { spawn "niri" "msg" "action" "move-floating-window" "-x" "+20"; }
+    Mod+Ctrl+Shift+Up    { spawn "niri" "msg" "action" "move-floating-window" "-y" "-20"; }
+    Mod+Ctrl+Shift+Down  { spawn "niri" "msg" "action" "move-floating-window" "-y" "+20"; }
+
+    Mod+Alt+Shift+Left   { set-window-width  "-20"; }
+    Mod+Alt+Shift+Right  { set-window-width  "+20"; }
+    Mod+Alt+Shift+Up     { set-window-height "-20"; }
+    Mod+Alt+Shift+Down   { set-window-height "+20"; }
+
 }
 
 // enable electron app

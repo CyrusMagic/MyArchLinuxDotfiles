@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Prefer X11 backend for Electron
+export ELECTRON_OZONE_PLATFORM_HINT=x11
+export OZONE_PLATFORM=x11
+# Prefer software rendering to avoid GPU/driver glitches under XWayland
+export LIBGL_ALWAYS_SOFTWARE=${LIBGL_ALWAYS_SOFTWARE:-1}
+# IME
+export GTK_IM_MODULE=${GTK_IM_MODULE:-fcitx}
+export QT_IM_MODULE=${QT_IM_MODULE:-fcitx}
+export XMODIFIERS=${XMODIFIERS:-@im=fcitx}
+# Scale factor to match your 1.5 display scale; override via ELECTRON_SCALE_FACTOR
+SCALE="${ELECTRON_SCALE_FACTOR:-1.5}"
+exec "$@" \
+  --ozone-platform=x11 \
+  --disable-gpu --disable-gpu-compositing \
+  --force-device-scale-factor="$SCALE"
