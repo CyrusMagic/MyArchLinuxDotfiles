@@ -1,0 +1,26 @@
+matches:
+  - trigger: "tt="
+    replace: "tintingoo23@gmail.com"
+    label: "邮箱"
+
+  - trigger: "ucas="
+    replace: "dingyi18@mail.ucas.edu.cn"
+    label: "邮箱"
+
+  - trigger: "v100pwd="
+    replace: "iOe9Z1xgdKf82b5A6INLyF4p03Q7uRvz"
+    label: "pwd"
+
+  - trigger: "sig/"
+    word: false
+    replace: |-
+      谢谢！
+      Cyrus
+
+  - trigger: ":date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y-%m-%d"

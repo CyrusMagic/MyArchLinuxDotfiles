@@ -1,0 +1,5 @@
+imports:
+  - match/base.yml
+
+backend: auto
+wayland_backend: wlroots
